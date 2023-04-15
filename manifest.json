@@ -1,0 +1,12 @@
+{
+  "name": "azure repos sjis extension",
+  "description": "chrome extension for azure repos sjis files",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["https://dev.azure.com/*"],
+      "js": ["./src/main.js"]
+    }
+  ]
+}
