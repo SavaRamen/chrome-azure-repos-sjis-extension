@@ -1,5 +1,5 @@
 {
-  "name": "azure repos sjis extension",
+  "name": "Azure Repos SJIS Extension",
   "description": "chrome extension for azure repos sjis files",
   "version": "1.0",
   "manifest_version": 3,

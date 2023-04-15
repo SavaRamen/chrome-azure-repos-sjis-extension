@@ -1,6 +1,7 @@
 (() => {
   /* 機能：sjisのファイルをwindows-1252として復号化された文字列をsjisに変換 */
-  const attr_done = "azure_repos_sjis";
+  const done_attr = "azure_repos_sjis";
+  const done_style = "font-style:italic";
   const app_name = "azure repos sjis extension";
   console.log(`${app_name}:`);
 
@@ -48,25 +49,43 @@
   const observer = new MutationObserver((list, observer) => {
     /* files - contents / history / blame用 */
     let count_1 = 0;
-    document.querySelectorAll(`.page-content .view-line span[class]:not([${attr_done}])`).forEach($element => {
-      $element.innerText = w2s.decode_text($element.innerText);
-      $element.setAttribute(attr_done, "");
-      count_1++;
+    document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
+      let w_text = $element.innerText;
+      let s_text = w2s.decode_text($element.innerText);
+      if (w_text != s_text) {
+        $element.innerText = s_text;
+        $element.setAttribute(done_attr, "");
+        $element.style = done_style;
+        count_1++;
+      }
     });
     /* commits用 */
     let count_2 = 0;
-    document.querySelectorAll(`.page-content .repos-line-content:not([${attr_done}])`).forEach($element => {
+    document.querySelectorAll(`.page-content .repos-line-content:not([${done_attr}])`).forEach($element => {
+      let is_done = false;
       $element.childNodes.forEach($node => {
         if (!$node.tag && $node.data) {
-          $node.data = w2s.decode_text($node.data);
-          $element.setAttribute(attr_done, "");
-          count_2++;
+          let w_text = $node.data;
+          let s_text = w2s.decode_text(w_text);
+          if (w_text != s_text) {
+            $node.data = s_text;
+            is_done = true;
+          }
         } else if ($node.tagName === "SPAN" && !$node.class && !$node.ariaHidden) {
-          $node.innerText = w2s.decode_text($node.innerText);
-          $element.setAttribute(attr_done, "");
-          count_2++;
+          is_done = true;
+          let w_text = $node.innerText;
+          let s_text = w2s.decode_text(w_text);
+          if (w_text != s_text) {
+            $node.innerText = s_text;
+            is_done = true;
+          }
         }
       });
+      if (is_done) {
+        $element.setAttribute(done_attr, "");
+        $element.style = done_style;
+        count_2++;
+      }
     });
     // if (count_1 || count_2) console.log(`${app_name}:`, count_1, count_2);
   });
