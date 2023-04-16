@@ -19,7 +19,7 @@ Azure Repos の Web サイトで SJIS ファイルを表示するための拡張
 - 開発
   - `./src` 更新
 - テスト
-  - `chrome://extensions` で「パッケージ化されていない拡張機能を読み込む」
+  - `chrome://extensions` の「パッケージ化されていない拡張機能を読み込む」で `./extension` フォルダを指定
 - ドキュメント
   - `./README.md`更新
   - `./extension/manifest.json` の `version` プロパティを修正
