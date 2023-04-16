@@ -11,3 +11,20 @@ The Azure Repos website only supports displaying in UTF-8. Therefore, SJIS files
 #### after
 
 ![after](./images/after.png)
+
+### update procedures
+
+- develop
+  - vscode
+    - update `./src`
+- test
+  - chrome://extensions
+    - load unpackaged extensions
+      - folder: `./extension/`
+- document
+  - vscode
+    - update `./README.md`
+    - update `version` property in `./extension/manifest.json`
+- release
+  - [chrome web store](https://chrome.google.com/webstore/category/extensionschrome)
+    - developer dashboard
