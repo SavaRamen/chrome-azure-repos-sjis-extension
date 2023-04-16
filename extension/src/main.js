@@ -46,7 +46,7 @@ w2s.init();
 /* ページ書き換え処理 */
 const repos = {
   rewrite() {
-    /* files - contents / history / blame用 */
+    /* files(contents, history, blame)用 */
     let count_files = 0;
     document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
       const w_text = $element.innerText;
@@ -57,9 +57,9 @@ const repos = {
         count_files++;
       }
     });
-    /* commits用 */
+    /* commits, pushes用 */
     let count_commits = 0;
-    document.querySelectorAll(`.page-content .repos-line-content:not([${done_attr}])`).forEach($element => {
+    document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($element => {
       $element.childNodes.forEach($node => {
         if (!$node.tag && $node.data) {
           const w_text = $node.data;
@@ -69,7 +69,7 @@ const repos = {
             $element.setAttribute(done_attr, "");
             count_commits++;
           }
-        } else if ($node.tagName === "SPAN" && !$node.class && !$node.ariaHidden) {
+        } else if ($node.tagName === "SPAN" && $node.className != "screen-reader-only" && !$node.ariaHidden) {
           is_done = true;
           const w_text = $node.innerText;
           const s_text = w2s.decode_text(w_text);
