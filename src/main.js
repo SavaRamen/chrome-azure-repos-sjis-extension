@@ -1,11 +1,10 @@
 (() => {
-  /* 機能：sjisのファイルをwindows-1252として復号化された文字列をsjisに変換 */
+  /* Azure ReposでSJISファイルを表示 */
   const done_attr = "azure_repos_sjis";
-  const done_style = "font-style:italic";
   const app_name = "azure repos sjis extension";
   console.log(`${app_name}:`);
 
-  /* windows-1252からsjisへの変換オブジェクト */
+  /* Windows 1252からSJISへの文字列の変換 */
   const w2s = {
     _s_decoder: new TextDecoder("shift-jis"),
     _w_decoder: new TextDecoder("windows-1252"),
@@ -45,49 +44,50 @@
   };
   w2s.init();
 
-  /* ページの監視 */
-  const observer = new MutationObserver((list, observer) => {
-    /* files - contents / history / blame用 */
-    let count_1 = 0;
-    document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
-      let w_text = $element.innerText;
-      let s_text = w2s.decode_text($element.innerText);
-      if (w_text != s_text) {
-        $element.innerText = s_text;
-        $element.setAttribute(done_attr, "");
-        $element.style = done_style;
-        count_1++;
-      }
-    });
-    /* commits用 */
-    let count_2 = 0;
-    document.querySelectorAll(`.page-content .repos-line-content:not([${done_attr}])`).forEach($element => {
-      let is_done = false;
-      $element.childNodes.forEach($node => {
-        if (!$node.tag && $node.data) {
-          let w_text = $node.data;
-          let s_text = w2s.decode_text(w_text);
-          if (w_text != s_text) {
-            $node.data = s_text;
-            is_done = true;
-          }
-        } else if ($node.tagName === "SPAN" && !$node.class && !$node.ariaHidden) {
-          is_done = true;
-          let w_text = $node.innerText;
-          let s_text = w2s.decode_text(w_text);
-          if (w_text != s_text) {
-            $node.innerText = s_text;
-            is_done = true;
-          }
+  /* ページ書き換え処理 */
+  const repos = {
+    rewrite() {
+      /* files - contents / history / blame用 */
+      let count_files = 0;
+      document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
+        let w_text = $element.innerText;
+        let s_text = w2s.decode_text($element.innerText);
+        if (w_text != s_text) {
+          $element.innerText = s_text;
+          $element.setAttribute(done_attr, "");
+          count_files++;
         }
       });
-      if (is_done) {
-        $element.setAttribute(done_attr, "");
-        $element.style = done_style;
-        count_2++;
-      }
-    });
-    // if (count_1 || count_2) console.log(`${app_name}:`, count_1, count_2);
+      /* commits用 */
+      let count_commits = 0;
+      document.querySelectorAll(`.page-content .repos-line-content:not([${done_attr}])`).forEach($element => {
+        $element.childNodes.forEach($node => {
+          if (!$node.tag && $node.data) {
+            let w_text = $node.data;
+            let s_text = w2s.decode_text(w_text);
+            if (w_text != s_text) {
+              $node.data = s_text;
+              $element.setAttribute(done_attr, "");
+              count_commits++;
+            }
+          } else if ($node.tagName === "SPAN" && !$node.class && !$node.ariaHidden) {
+            is_done = true;
+            let w_text = $node.innerText;
+            let s_text = w2s.decode_text(w_text);
+            if (w_text != s_text) {
+              $node.innerText = s_text;
+              $element.setAttribute(done_attr, "");
+              count_commits++;
+            }
+          }
+        });
+      });
+    },
+  };
+
+  /* ページ変更監視処理 */
+  const observer = new MutationObserver((list, observer) => {
+    repos.rewrite();
   });
   observer.observe(document.body, { childList: true, subtree: true });
 })();
