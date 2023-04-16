@@ -1,30 +1,27 @@
 # Chrome Extension for Azure Repos SJIS files
 
-This extension supports displaying SJIS files in Azure Repos website.
+Azure Repos の Web サイトで SJIS ファイルを表示するための拡張機能です。
 
-The Azure Repos website only supports displaying in UTF-8. Therefore, SJIS files are normally not displayed properly. This extension corrects the display of SJIS files.
+- Azure Repos の Web サイトは UTF-8 以外のファイルは適切に表示されません。コミットされているファイルのエンコーディングに関わらず Windows-1252 として処理しているため文字化けが生じます。
 
-### before
+- 本拡張機能は SJIS ファイルの文字化けを訂正して適切に表示します。
+
+#### 通常の SJIS ファイルの表示
 
 ![before](./images/before.png)
 
-#### after
+#### 本拡張機能適用後の SJIS ファイルの表示
 
 ![after](./images/after.png)
 
-### update procedures
+#### 開発手順
 
-- develop
-  - vscode
-    - update `./src`
-- test
-  - chrome://extensions
-    - load unpackaged extensions
-      - folder: `./extension/`
-- document
-  - vscode
-    - update `./README.md`
-    - update `version` property in `./extension/manifest.json`
-- release
-  - [chrome web store](https://chrome.google.com/webstore/category/extensionschrome)
-    - developer dashboard
+- 開発
+  - `./src` 更新
+- テスト
+  - `chrome://extensions` で「パッケージ化されていない拡張機能を読み込む」
+- ドキュメント
+  - `./README.md`更新
+  - `./extension/manifest.json` の `version` プロパティを修正
+- リリース
+  - [chrome web store](https://chrome.google.com/webstore/category/extensionschrome) ≫ developer dashboard
