@@ -44,11 +44,13 @@ const w2s = {
   // 文字列取得
   get_text($element) {
     let w_text = $element.innerText;
-    // 二文字目の"[", "]"で区切られてしまう問題への対処
-    let w_next = $element.nextSibling?.innerText;
-    if (w_next?.match(/^[\[\]]/)) {
-      w_text += w_next;
-      $element.nextElementSibling.remove();
+    let w_next_1 = w_text[w_text.length - 1];
+    let w_next_2 = $element.nextSibling?.innerText?.[0];
+    let w_next = w_next_1 + w_next_2;
+    let s_next = this._w2s_hash[w_next];
+    if (s_next) {
+      w_text += w_next_2;
+      $element.nextSibling.innerText = $element.nextSibling.innerText.substring(1);
     }
     return w_text;
   }
