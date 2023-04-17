@@ -62,7 +62,6 @@ const repos = {
   rewrite() {
 
     // files(contents, history, blame)用
-    let count_files = 0;
     document.querySelectorAll(`.page-content .view-line:not([${done_attr}]`).forEach($line => {
       $line.querySelectorAll(`span`).forEach($span => {
         const w_text = w2s.get_text($span);
@@ -71,13 +70,11 @@ const repos = {
           $span.innerText = s_text;
           $line.setAttribute(done_attr, "");
           $line.style.fontWeight = "bold";
-          count_files++;
         }
       });
     });
 
     // commits, pushes用
-    let count_commits = 0;
     document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($line => {
       $line.childNodes.forEach($node => {
         if (!$node.tag && $node.data) {
@@ -87,7 +84,6 @@ const repos = {
             $node.data = s_text;
             $line.setAttribute(done_attr, "");
             $line.style.fontWeight = "bold";
-            count_commits++;
           }
         } else if ($node.tagName === "SPAN" && $node.className != "screen-reader-only" && !$node.ariaHidden) {
           const w_text = w2s.get_text($node);
@@ -96,7 +92,6 @@ const repos = {
             $node.innerText = s_text;
             $line.setAttribute(done_attr, "");
             $line.style.fontWeight = "bold";
-            count_commits++;
           }
         }
       });
