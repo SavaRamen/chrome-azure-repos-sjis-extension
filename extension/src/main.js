@@ -63,26 +63,30 @@ const repos = {
 
     // files(contents, history, blame)用
     let count_files = 0;
-    document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
-      const w_text = w2s.get_text($element);
-      const s_text = w2s.decode_text($element.innerText);
-      if (w_text != s_text) {
-        $element.innerText = s_text;
-        $element.setAttribute(done_attr, "");
-        count_files++;
-      }
+    document.querySelectorAll(`.page-content .view-line:not([${done_attr}]`).forEach($line => {
+      $line.querySelectorAll(`span`).forEach($span => {
+        const w_text = w2s.get_text($span);
+        const s_text = w2s.decode_text($span.innerText);
+        if (w_text != s_text) {
+          $span.innerText = s_text;
+          $line.setAttribute(done_attr, "");
+          $line.style.fontWeight = "bold";
+          count_files++;
+        }
+      });
     });
 
     // commits, pushes用
     let count_commits = 0;
-    document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($element => {
-      $element.childNodes.forEach($node => {
+    document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($line => {
+      $line.childNodes.forEach($node => {
         if (!$node.tag && $node.data) {
           const w_text = $node.data;
           const s_text = w2s.decode_text(w_text);
           if (w_text != s_text) {
             $node.data = s_text;
-            $element.setAttribute(done_attr, "");
+            $line.setAttribute(done_attr, "");
+            $line.style.fontWeight = "bold";
             count_commits++;
           }
         } else if ($node.tagName === "SPAN" && $node.className != "screen-reader-only" && !$node.ariaHidden) {
@@ -90,18 +94,22 @@ const repos = {
           const s_text = w2s.decode_text(w_text);
           if (w_text != s_text) {
             $node.innerText = s_text;
-            $element.setAttribute(done_attr, "");
+            $line.setAttribute(done_attr, "");
+            $line.style.fontWeight = "bold";
             count_commits++;
           }
         }
       });
     });
     // windows-1252の誤復号のため文字単位の差分表示は意味がないため削除
-    document.querySelectorAll(".view-overlays").forEach($element => {
-      $element.querySelectorAll(".char-insert, .char-delete").forEach($element => {
-        $element.remove();
+    let is_done_attr = document.querySelectorAll(`[${done_attr}]`).length != 0;
+    if (is_done_attr) {
+      document.querySelectorAll(".view-overlays").forEach($element => {
+        $element.querySelectorAll(".char-insert, .char-delete").forEach($element => {
+          $element.remove();
+        });
       });
-    });
+    }
   },
 };
 
