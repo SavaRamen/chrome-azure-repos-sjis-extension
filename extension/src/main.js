@@ -1,9 +1,9 @@
-/* Azure ReposでSJISファイルを表示 */
+// Azure ReposでSJISファイルを表示
 const done_attr = "azure_repos_sjis";
 const app_name = "azure repos sjis extension";
 console.log(`${app_name}:`);
 
-/* Windows 1252からSJISへの文字列の変換 */
+// Windows 1252からSJISへの文字列の変換
 const w2s = {
   _s_decoder: new TextDecoder("shift-jis"),
   _w_decoder: new TextDecoder("windows-1252"),
@@ -24,6 +24,7 @@ const w2s = {
       this._make_w2s_hash(hx);
     }
   },
+  // 文字列復元
   decode_text(w_text) {
     w_text = w_text || "";
     let s_text = "";
@@ -40,16 +41,27 @@ const w2s = {
     }
     return s_text;
   },
+  // 文字列取得
+  get_text($element) {
+    let w_text = $element.innerText;
+    // 二文字目の"[", "]"で区切られてしまう問題への対処
+    let w_next = $element.nextSibling?.innerText;
+    if (w_next?.match(/^[\[\]]/)) {
+      w_text += w_next;
+      $element.nextElementSibling.remove();
+    }
+    return w_text;
+  }
 };
 w2s.init();
 
-/* ページ書き換え処理 */
+// ページ書き換え処理
 const repos = {
   rewrite() {
-    /* files(contents, history, blame)用 */
+    // files(contents, history, blame)用
     let count_files = 0;
     document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
-      const w_text = $element.innerText;
+      const w_text = w2s.get_text($element);
       const s_text = w2s.decode_text($element.innerText);
       if (w_text != s_text) {
         $element.innerText = s_text;
@@ -57,7 +69,7 @@ const repos = {
         count_files++;
       }
     });
-    /* commits, pushes用 */
+    // commits, pushes用
     let count_commits = 0;
     document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($element => {
       $element.childNodes.forEach($node => {
@@ -70,8 +82,7 @@ const repos = {
             count_commits++;
           }
         } else if ($node.tagName === "SPAN" && $node.className != "screen-reader-only" && !$node.ariaHidden) {
-          is_done = true;
-          const w_text = $node.innerText;
+          const w_text = w2s.get_text($node);
           const s_text = w2s.decode_text(w_text);
           if (w_text != s_text) {
             $node.innerText = s_text;
@@ -84,7 +95,7 @@ const repos = {
   },
 };
 
-/* ページ変更監視処理 */
+// ページ変更監視処理
 const observer = new MutationObserver((list, observer) => {
   repos.rewrite();
 });
