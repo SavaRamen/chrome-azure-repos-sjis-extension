@@ -58,6 +58,7 @@ w2s.init();
 // ページ書き換え処理
 const repos = {
   rewrite() {
+
     // files(contents, history, blame)用
     let count_files = 0;
     document.querySelectorAll(`.page-content .view-line span[class]:not([${done_attr}])`).forEach($element => {
@@ -69,6 +70,7 @@ const repos = {
         count_files++;
       }
     });
+
     // commits, pushes用
     let count_commits = 0;
     document.querySelectorAll(`.repos-changes-viewer .repos-line-content:not([${done_attr}])`).forEach($element => {
@@ -90,6 +92,12 @@ const repos = {
             count_commits++;
           }
         }
+      });
+    });
+    // windows-1252の誤復号のため文字単位の差分表示は意味がないため削除
+    document.querySelectorAll(".view-overlays").forEach($element => {
+      $element.querySelectorAll(".char-insert, .char-delete").forEach($element => {
+        $element.remove();
       });
     });
   },
