@@ -1,4 +1,7 @@
 // Azure ReposでSJISファイルを表示
+// TODO boldは感じ方が重い
+// TODO spanのinnerTextを置き換えるとclassが消える
+// TODO 文字が選択できないのは仕方ない
 const done_attr = "azure_repos_sjis";
 const app_name = "azure repos sjis extension";
 console.log(`${app_name}:`);
