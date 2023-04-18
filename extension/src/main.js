@@ -1,8 +1,5 @@
 // Azure ReposでSJISファイルを表示
-// TODO boldは感じ方が重い
-// TODO spanのinnerTextを置き換えるとclassが消える
-// TODO 文字が選択できないのは仕方ない
-const done_attr = "azure_repos_sjis";
+const done_attr = "azure-repos-sjis";
 const app_name = "azure repos sjis extension";
 console.log(`${app_name}:`);
 
@@ -66,7 +63,7 @@ const repos = {
 
     // files(contents, history, blame)用
     document.querySelectorAll(`.page-content .view-line:not([${done_attr}]`).forEach($line => {
-      $line.querySelectorAll(`span`).forEach($span => {
+      $line.querySelectorAll(`span[class]`).forEach($span => {
         const w_text = w2s.get_text($span);
         const s_text = w2s.decode_text($span.innerText);
         if (w_text != s_text) {
