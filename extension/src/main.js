@@ -70,16 +70,18 @@ const w2s = {
   /** 要素からWindows-1252の文字列を取得 */
   get_text($element) {
     let w_text = $element.innerText;
-    // 全角文字が要素を超えて分断されている場合
+    // 全角文字が要素を超えて分断されている場合、次の要素が空白要素でなければ
     // 末尾の文字と次の要素の先頭文字と組み合わせたものが変換マップにあるかを判定
     let w_next_1 = w_text[w_text.length - 1];
-    let w_next_2 = $element.nextSibling?.innerText?.[0];
-    let w_next = w_next_1 + w_next_2;
-    let s_next = this._w2s_map[w_next];
-    if (s_next) {
-      w_text += w_next_2;
-      $element.nextSibling.innerText =
-        $element.nextSibling.innerText.substring(1);
+    let w_next_2 = !$element.nextSibling?.classList?.contains("mtkw") && $element.nextSibling?.innerText?.[0];
+    if (w_next_1 && w_next_2) {
+      let w_next = w_next_1 + w_next_2;
+      let s_next = this._w2s_map[w_next];
+      if (s_next) {
+        w_text += w_next_2;
+        $element.nextSibling.innerText =
+          $element.nextSibling.innerText.substring(1);
+      }
     }
     return w_text;
   }
@@ -149,11 +151,20 @@ const viewer = {
     // 変換済み属性がある場合は文字単位の差分表示は間違っているため削除
     let is_done_attr = document.querySelectorAll(`[${done_attr}]`).length != 0;
     if (is_done_attr) {
+      // files(contents, history, blame)用
       document.querySelectorAll(".view-overlays").forEach(($element) => {
         $element
           .querySelectorAll(".char-insert, .char-delete")
           .forEach(($element) => {
             $element.remove();
+          });
+      });
+      // commits, pushes用
+      document.querySelectorAll(".repos-summary-diff-blocks").forEach(($element) => {
+        $element
+          .querySelectorAll(".added-content, .removed-content")
+          .forEach(($element) => {
+            $element.className = "";
           });
       });
     }
