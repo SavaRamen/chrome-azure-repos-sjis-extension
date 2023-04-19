@@ -132,7 +132,7 @@ const viewer = {
             }
           } else if (
             $node.tagName === "SPAN" &&
-            $node.className != "screen-reader-only" &&
+            !$node.classList.conatins("screen-reader-only") &&
             !$node.ariaHidden
           ) {
             // ノードが<SPAN>の場合
