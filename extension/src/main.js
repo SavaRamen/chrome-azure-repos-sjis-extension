@@ -97,7 +97,7 @@ const viewer = {
       .forEach(($line) => {
         $line.querySelectorAll(`span[class]`).forEach(($span) => {
           let w_text = w2s.get_text($span);
-          if ($span.className == "mtkw") {
+          if ($span.classList.contains("mtkw")) {
             // 右クリックメニューの[User Preferences]-[Show and diff white space]がチェックされている場合、
             // 空白ではなく"·"(=0xb7)になっているので、クラス名"mtkw"で判定して空白に戻す。
             // この処理が必要なのはfilesメニューの場合だけ。
