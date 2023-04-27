@@ -15,8 +15,7 @@ const w2s = {
   _w_decoder: new TextDecoder("windows-1252"),
   /** Windows-1252からSJISへの変換マップ */
   _w2s_map: {},
-  /** 
-   * 変換マップ作成
+  /** 変換マップ作成
    *  SJISを一文字ずつWindows-1252に変換し、Windows-1252からSJISへの変換マップを作製
    */
   _make_w2s_map(hxmin, lxmin, hxmax, lxmax) {
@@ -71,12 +70,11 @@ const w2s = {
   /** 要素からWindows-1252の文字列を取得 */
   get_text($element) {
     let w_text = $element.innerText;
-    /** 
-     * 全角文字が要素を超えて分断されている場合、次の要素が空白要素でなければ
-     * 末尾の文字と次の要素の先頭文字と組み合わせたものが変換マップにあるかを判定
-     */
+    /* 全角文字が要素を超えて分断されている場合、次の要素が空白要素でなければ、末尾の文字と次の要素の先頭文字と組み合わせたものが変換マップにあるかを判定 */
     let w_next_1 = w_text[w_text.length - 1];
-    let w_next_2 = !$element.nextSibling?.classList?.contains("mtkw") && $element.nextSibling?.innerText?.[0];
+    let w_next_2 =
+      !$element.nextSibling?.classList?.contains("mtkw") &&
+      $element.nextSibling?.innerText?.[0];
     if (w_next_1 && w_next_2) {
       let w_next = w_next_1 + w_next_2;
       let s_next = this._w2s_map[w_next];
@@ -121,8 +119,20 @@ const viewer = {
         });
       });
 
-    /**
-     * commits, pushes用
+    /** files(preview)用
+     * html要素を探して一括してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+     */
+    document.querySelectorAll(`iframe:not([${done_attr}]`).forEach(($iframe) => {
+      const w_text = $iframe.srcdoc;
+      const s_text = w2s.decode_text(w_text);
+      if (w_text != s_text) {
+        $iframe.setAttribute("srcdoc", s_text);
+        $iframe.setAttribute(done_attr, "");
+        $iframe.style.fontWeight = "bold";
+      }
+    });
+
+    /** commits, pushes用
      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
      */
     document
@@ -168,13 +178,15 @@ const viewer = {
           });
       });
       /* commits, pushes用 */
-      document.querySelectorAll(".repos-summary-diff-blocks").forEach(($element) => {
-        $element
-          .querySelectorAll(".added-content, .removed-content")
-          .forEach(($element) => {
-            $element.className = "";
-          });
-      });
+      document
+        .querySelectorAll(".repos-summary-diff-blocks")
+        .forEach(($element) => {
+          $element
+            .querySelectorAll(".added-content, .removed-content")
+            .forEach(($element) => {
+              $element.className = "";
+            });
+        });
     }
   }
 };
