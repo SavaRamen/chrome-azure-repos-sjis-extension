@@ -120,7 +120,7 @@ const viewer = {
       });
 
     /** files(preview)用
-     * html要素を探して一括してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+     * iframe要素を探して一括してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
      */
     document.querySelectorAll(`iframe:not([${done_attr}]`).forEach(($iframe) => {
       const w_text = $iframe.srcdoc;
