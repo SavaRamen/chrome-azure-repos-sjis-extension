@@ -122,15 +122,17 @@ const viewer = {
     /** files(preview)用
      * iframe要素を探して一括してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
      */
-    document.querySelectorAll(`iframe:not([${done_attr}]`).forEach(($iframe) => {
-      const w_text = $iframe.srcdoc;
-      const s_text = w2s.decode_text(w_text);
-      if (w_text != s_text) {
-        $iframe.setAttribute("srcdoc", s_text);
-        $iframe.setAttribute(done_attr, "");
-        $iframe.style.fontWeight = "bold";
-      }
-    });
+    document
+      .querySelectorAll(`iframe:not([${done_attr}]`)
+      .forEach(($iframe) => {
+        const w_text = $iframe.srcdoc;
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $iframe.setAttribute("srcdoc", s_text);
+          $iframe.setAttribute(done_attr, "");
+          $iframe.style.fontWeight = "bold";
+        }
+      });
 
     /** commits, pushes用
      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
@@ -166,6 +168,46 @@ const viewer = {
           }
         });
       });
+
+    /** wiki用
+     * iframe要素を探して再帰的にWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+     * 一括して行わないのは要素が
+     */
+    function modify_element($element) {
+      let done = false;
+      if ($element.data) {
+        const w_text = $element.data;
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $element.data = s_text;
+          done = true;
+        }
+      }
+      if ($element.childNodes) {
+        $element.childNodes.forEach(($node, index) => {
+          if (typeof $node == "string") {
+            const w_text = $node;
+            const s_text = w2s.decode_text(w_text);
+            if (w_text != s_text) {
+              $element[index] = s_text;
+              done = true;
+            }
+          } else {
+            if (modify_element($node)) done = true;
+          }
+        });
+      }
+      return done;
+    }
+    document
+      .querySelectorAll(`.wiki-view-container > div:not([${done_attr}])`)
+      .forEach($div => {
+        if (modify_element($div)) {
+          // $div.setAttribute(done_attr, "");
+          $div.style.fontWeight = "bold";
+        }
+      });
+
     /* 変換済み属性がある場合は文字単位の差分表示は間違っているため削除 */
     let is_done_attr = document.querySelectorAll(`[${done_attr}]`).length != 0;
     if (is_done_attr) {
