@@ -134,6 +134,25 @@ const viewer = {
         }
       });
 
+    /** PullRequest Overview用
+     * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+     */
+    document
+      .querySelectorAll(
+        `.padding-right-8.repos-line-content`
+      ).forEach(($line) => {
+        let w_text = w2s.get_text($line);
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $line.innerText= s_text;
+          $line.innerText=$line.innerText.replace(/^Plus / ,'+')
+          $line.innerText=$line.innerText.replace(/^Minus / ,'-')
+          $line.innerText=$line.innerText.replace('\n' ,'')
+          $line.setAttribute(done_attr, "");
+          $line.style.fontWeight = "bold";
+        }
+      });
+
     /** commits, pushes用
      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
      */
