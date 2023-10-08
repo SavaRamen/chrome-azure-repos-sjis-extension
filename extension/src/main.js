@@ -144,58 +144,135 @@ const viewer = {
         let w_text = w2s.get_text($line);
         const s_text = w2s.decode_text(w_text);
         if (w_text != s_text) {
-          $line.innerText= s_text;
-          $line.innerText=$line.innerText.replace(/^Plus / ,'+')
-          $line.innerText=$line.innerText.replace(/^Minus / ,'-')
-          $line.innerText=$line.innerText.replace('\n' ,'')
+          $line.innerText = s_text;
+          $line.innerText = $line.innerText.replace(/^Plus /, '+')
+          $line.innerText = $line.innerText.replace(/^Minus /, '-')
+          $line.innerText = $line.innerText.replace('\n', '')
           $line.setAttribute(done_attr, "");
           $line.style.fontWeight = "bold";
         }
       });
 
     /** Files Contents Preview用(プレーンテキスト)
-     * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
-     */
+      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+      */
     document
       .querySelectorAll(
-        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden :not(.hljs)`
+        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden p a a`
       ).forEach(($line) => {
         let w_text = w2s.get_text($line);
         const s_text = w2s.decode_text(w_text);
         if (w_text != s_text) {
-          $line.innerText= s_text;
-          // $line.innerText=$line.innerText.replace(/^Plus / ,'+')
-          // $line.innerText=$line.innerText.replace(/^Minus / ,'-')
-          // $line.innerText=$line.innerText.replace('\n' ,'')
-          // $line.setAttribute(done_attr, "");
-          $line.style.fontWeight = "bold";
-        }
-      });
-
-
-    /** Files Contents Preview用（コードブロック）
-     * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
-     */
-    document
-      .querySelectorAll(
-        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden .hljs`
-      ).forEach(($line) => {
-        
-        // $text_list = $line.innerText.split('\n');
-        // for($text in $text_list){
-        //   if($text.match(/[](http)/g))
-
-        // }
-
-        
-        let w_text = w2s.get_text($line);
-        const s_text = w2s.decode_text(w_text);
-        if (w_text != s_text) {
-          $line.innerText= s_text;
+          $line.innerText = s_text;
           $line.setAttribute(done_attr, "");
           $line.style.fontWeight = "bold";
         }
       });
+
+    /** Files Contents Preview用(プレーンテキスト)
+      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+      */
+    document
+      .querySelectorAll(
+        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden p a`
+      ).forEach(($line) => {
+        let w_text = w2s.get_text($line);
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $line.innerText = s_text;
+          $line.setAttribute(done_attr, "");
+          $line.style.fontWeight = "bold";
+        }
+      });
+
+    /** Files Contents Preview用(プレーンテキスト)
+      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+      */
+    document
+      .querySelectorAll(
+        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden p code`
+      ).forEach(($line) => {
+        let w_text = w2s.get_text($line);
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $line.innerText = s_text;
+          $line.setAttribute(done_attr, "");
+          $line.style.fontWeight = "bold";
+        }
+      });
+
+    /** Files Contents Preview用(コードブロック)
+      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+      */
+    document
+      .querySelectorAll(
+        `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden pre`
+      ).forEach(($line) => {
+        let w_text = w2s.get_text($line);
+        const s_text = w2s.decode_text(w_text);
+        if (w_text != s_text) {
+          $line.innerText = s_text;
+          $line.setAttribute(done_attr, "");
+          $line.style.fontWeight = "bold";
+        }
+      });
+
+
+    /** Files Contents Preview用(プレーンテキスト)
+     * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+     */
+    // document
+    //   .querySelectorAll(
+    //     `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden:not(.hljs)`
+    //   ).forEach(($line) => {
+
+
+    //     console.log($line.innerText);
+
+    //     let w_array = $line.innerText.split('\n');
+    //     let s_array = [];
+    //     for ($i = 0; $i < w_array.length; $i++) {
+    //       if (w_array[$i].match(/\[+[\d\D]+\]+\(+[\d\D]+\)/g)) {
+    //         console.log(w_array[$i])
+    //         let w_text = w_array[$i];
+    //         const s_text = w2s.decode_text(w_text);
+    //         if (w_text != s_text) {
+    //           s_array.push(s_text);
+    //           // $line.innerText=$line.innerText.replace(/^Plus / ,'+')
+    //           // $line.innerText=$line.innerText.replace(/^Minus / ,'-')
+    //           // $line.innerText=$line.innerText.replace('\n' ,'')
+    //           // $line.setAttribute(done_attr, "");
+    //           // $line.style.fontWeight = "bold";
+    //         }
+    //       }
+
+    //     }
+    //     if(s_array.length>0){
+    //       $line.innerText = ""
+    //       $line.innerHTML = '<p>'+s_array.join('\n')+'</p>';
+    //       $line.setAttribute(done_attr, "");
+    //       $line.style.fontWeight = "bold";
+    //       // console.log(s_array.join('\n'));
+
+    //     }
+    //   });
+
+
+    // /** Files Contents Preview用（コードブロック）
+    //  * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
+    //  */
+    // document
+    //   .querySelectorAll(
+    //     `.markdown-content.markdown-editor-preview.flex-grow.markdown-preview-container.scroll-hidden.`
+    //   ).forEach(($line) => {
+    //     let w_text = w2s.get_text($line);
+    //     const s_text = w2s.decode_text(w_text);
+    //     if (w_text != s_text) {
+    //       $line.innerText = s_text;
+    //       $line.setAttribute(done_attr, "");
+    //       $line.style.fontWeight = "bold";
+    //     }
+    //   });
 
     /** commits, pushes用
      * 全行を列挙してWindows-1252からSJISへの変換を行う、すでに変換済みは除く
